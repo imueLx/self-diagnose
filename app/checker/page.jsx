@@ -1,20 +1,28 @@
+// Your existing SymptomChecker component
+
 "use client";
 import { useState } from "react";
-
-const symptomsData = {
-  "chest pain": "Possible Condition: Ischemic Heart Disease",
-  "high blood pressure": "Possible Condition: Hypertension",
-  "high fever": "Possible Condition: Dengue Fever",
-};
+import { symptomsData } from "../../data/symptomsData";
 
 export default function SymptomChecker() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const checkSymptoms = () => {
-    setResult(
-      symptomsData[input.toLowerCase()] || "No match found. Consult a doctor."
-    );
+    setLoading(true);
+    const lowerInput = input.toLowerCase();
+    setTimeout(() => {
+      if (symptomsData[lowerInput]) {
+        const { condition, brief, signs, reminder } = symptomsData[lowerInput];
+        setResult(
+          `Condition: ${condition}\n\nBrief Information: ${brief}\nSigns and Symptoms: ${signs}\nReminder: ${reminder}`
+        );
+      } else {
+        setResult("No match found. Try another symptom or consult a doctor.");
+      }
+      setLoading(false);
+    }, 1000);
   };
 
   return (
@@ -41,8 +49,11 @@ export default function SymptomChecker() {
         >
           Check
         </button>
-        {result && (
-          <p className="mt-6 text-lg font-semibold text-center">{result}</p>
+        {loading && <div className="mt-4 text-center">Loading...</div>}
+        {result && !loading && (
+          <pre className="mt-6 text-lg font-semibold text-center whitespace-pre-wrap">
+            {result}
+          </pre>
         )}
       </div>
     </div>
