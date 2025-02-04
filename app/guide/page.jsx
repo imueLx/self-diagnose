@@ -41,7 +41,7 @@ export default function Guide() {
               <li>
                 Trust websites from <strong>government agencies</strong> (CDC,
                 WHO, DOH) and
-                <strong>medical institutions</strong> (Mayo Clinic).
+                <strong> medical institutions</strong> (Mayo Clinic).
               </li>
               <li>
                 Be wary of{" "}
