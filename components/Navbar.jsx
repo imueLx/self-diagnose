@@ -64,26 +64,32 @@ export default function Navbar() {
         EduHealth
       </Link>
 
-      {/* Hamburger Menu Icon for Mobile */}
+      {/* Hamburger Menu Icon (Only for Small Screens) */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden p-2 z-50"
+        className="md:hidden p-2 z-50 absolute top-4 right-6"
         aria-label="Toggle Menu"
       >
-        {isMenuOpen ? (
-          <FiX size={24} className="text-blue-700 dark:text-blue-400" />
-        ) : (
-          <FiMenu size={24} className="text-blue-700 dark:text-blue-400" />
-        )}
+        <FiMenu size={28} className="text-blue-700 dark:text-blue-400" />
       </button>
 
-      {/* Navigation Links */}
+      {/* Sidebar Menu */}
       <div
         ref={menuRef}
         className={`fixed inset-y-0 right-0 w-4/5 bg-white dark:bg-gray-900 shadow-lg transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 md:static md:w-auto md:flex md:gap-6 md:items-center md:translate-x-0 md:bg-transparent md:shadow-none`}
+        } transition-transform duration-300 z-50 md:static md:w-auto md:flex md:gap-6 md:items-center md:translate-x-0 md:bg-transparent md:shadow-none`}
       >
+        {/* Close Button */}
+        <button
+          onClick={() => setIsMenuOpen(false)}
+          className="absolute top-4 right-6 p-2 text-blue-700 dark:text-blue-400 md:hidden"
+          aria-label="Close Menu"
+        >
+          <FiX size={28} />
+        </button>
+
+        {/* Navigation Links & Dark Mode Toggle for Mobile */}
         <div className="flex flex-col md:flex-row items-center justify-center h-full md:h-auto gap-4 p-6 md:p-0">
           {navLinks.map(({ name, path }) => (
             <Link
@@ -100,19 +106,26 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {/* Dark Mode Toggle for Small Screens */}
+          {/* Dark Mode Toggle for Mobile (Inside Menu) */}
           <button
             onClick={toggleDarkMode}
-            className="md:hidden p-2 mt-4 text-blue-700 dark:text-blue-400"
+            className="md:hidden p-3 mt-4 text-blue-700 dark:text-blue-400 border rounded-lg w-full"
             aria-label="Toggle Dark Mode"
           >
-            {darkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
+            {darkMode ? (
+              <span className="flex items-center justify-center gap-2">
+                <FiSun size={24} /> Light Mode
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <FiMoon size={24} /> Dark Mode
+              </span>
+            )}
           </button>
         </div>
       </div>
-
       {/* Dark Mode Toggle for Large Screens */}
-      <div className="hidden md:flex gap-4">
+      <div className="hidden md:flex gap-4 z-50">
         <button
           onClick={toggleDarkMode}
           className="p-2 text-blue-700 dark:text-blue-400"
