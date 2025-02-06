@@ -3,6 +3,8 @@ import { useState } from "react";
 import { symptomsData } from "../../data/symptomsData";
 import { useRouter } from "next/navigation";
 
+import { FaSearch, FaPlusCircle, FaSpinner } from "react-icons/fa";
+
 export default function SymptomChecker() {
   const [input, setInput] = useState("");
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -115,22 +117,27 @@ export default function SymptomChecker() {
 
         {/* Search Box */}
         <div className="mt-8 flex flex-col items-center">
-          <input
-            type="text"
-            className="border p-3 w-full md:w-2/3 dark:bg-gray-700 dark:text-white rounded-lg shadow-sm"
-            placeholder="Enter a symptom"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+          <div className="relative w-full md:w-2/3">
+            <input
+              type="text"
+              className="border p-3 w-full dark:bg-gray-700 dark:text-white rounded-lg shadow-sm pr-10"
+              placeholder="Enter a symptom"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <FaSearch className="absolute right-3 top-3 text-gray-400" />
+          </div>
+
           {filteredSymptoms.length > 0 && (
             <ul className="bg-white dark:bg-gray-800 border rounded-lg mt-2 shadow-md max-h-40 overflow-y-auto w-full md:w-2/3">
               {filteredSymptoms.map((symptom) => (
                 <li
                   key={symptom}
-                  className="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                  className="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 flex justify-between items-center"
                   onClick={() => addSymptom(symptom)}
                 >
                   {symptom}
+                  <FaPlusCircle className="text-blue-500" />
                 </li>
               ))}
             </ul>
@@ -169,7 +176,11 @@ export default function SymptomChecker() {
         </div>
 
         {/* Loading Indicator */}
-        {loading && <div className="mt-4 text-center">Loading...</div>}
+        {loading && (
+          <div className="mt-4 text-center justify-center flex items-center">
+            <FaSpinner className="animate-spin text-blue-500 text-2xl" />
+          </div>
+        )}
 
         {/* Matched Conditions */}
         {!loading && matchedConditions.length > 0 && (
@@ -178,7 +189,7 @@ export default function SymptomChecker() {
               Possible Conditions
             </h2>
             {matchedConditions.map(
-              ({ condition, brief, signs, reminder, matchCount }) => (
+              ({ condition, brief, signs, matchCount }) => (
                 <div
                   key={condition}
                   className="mt-4 p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800 cursor-pointer hover:shadow-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -197,6 +208,19 @@ export default function SymptomChecker() {
                     </span>
                   </h3>
                   <p className="mt-2">{brief}</p>
+                  <button
+                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(
+                        `/conditions/${condition
+                          .replace(/\s+/g, "-")
+                          .toLowerCase()}`
+                      );
+                    }}
+                  >
+                    Learn More
+                  </button>
                 </div>
               )
             )}
