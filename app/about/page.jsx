@@ -73,10 +73,17 @@ export default function About() {
           If you have any questions or feedback, please feel free to reach out
           to us at:{" "}
           <a
-            href="mailto:contact@digitalhealthliteracy.com"
+            href="mailto:mariacecelausa@gmail.com"
             className="text-blue-500 dark:text-blue-400 underline"
           >
-            contact@digitalhealthliteracy.com
+            mariacecelausa@gmail.com
+          </a>
+          <br />
+          <a
+            href="mailto:nicaerese158@gmail.com"
+            className="text-blue-500 dark:text-blue-400 underline"
+          >
+            nicaerese158@gmail.com
           </a>
         </p>
       </section>
