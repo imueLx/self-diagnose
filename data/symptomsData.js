@@ -11,7 +11,12 @@ export const symptomsData = {
     ],
     reminder:
       "These symptoms can vary; consult a healthcare provider for an accurate diagnosis.",
-    doctor: ["Cardiologist", "General Practitioner"],
+    doctor: {
+      Cardiologist:
+        "Specializes in heart conditions and manages blood flow issues.",
+      "General Practitioner":
+        "Can evaluate symptoms and provide referrals if necessary.",
+    },
     severity: "Severe",
   },
   hypertension: {
@@ -26,7 +31,12 @@ export const symptomsData = {
     ],
     reminder:
       "Regular monitoring is essential; seek medical advice if you experience symptoms.",
-    doctor: ["Cardiologist", "General Practitioner"],
+    doctor: {
+      Cardiologist:
+        "Manages blood pressure and reduces risk of heart-related complications.",
+      "General Practitioner":
+        "Provides routine blood pressure checks and treatment options.",
+    },
     severity: "Moderate",
   },
   "dengue fever": {
@@ -41,7 +51,12 @@ export const symptomsData = {
     ],
     reminder:
       "If you suspect dengue fever due to mosquito exposure, seek medical attention immediately.",
-    doctor: ["Infectious Disease Specialist", "General Practitioner"],
+    doctor: {
+      "Infectious Disease Specialist":
+        "Specializes in diagnosing and treating viral infections like dengue.",
+      "General Practitioner":
+        "Can assess symptoms and recommend initial supportive treatment.",
+    },
     severity: "Severe",
   },
   "diabetes mellitus": {
@@ -56,7 +71,12 @@ export const symptomsData = {
     ],
     reminder:
       "Consult a healthcare provider for blood sugar testing and management strategies.",
-    doctor: ["Endocrinologist", "General Practitioner"],
+    doctor: {
+      Endocrinologist:
+        "Specializes in hormonal disorders, including diabetes management.",
+      "General Practitioner":
+        "Provides initial diagnosis and can offer lifestyle guidance.",
+    },
     severity: "Moderate",
   },
   "tuberculosis (tb)": {
@@ -72,7 +92,11 @@ export const symptomsData = {
     ],
     reminder:
       "If you suspect TB, seek immediate medical attention for testing and treatment.",
-    doctor: ["Pulmonologist", "Infectious Disease Specialist"],
+    doctor: {
+      Pulmonologist: "Specializes in lung diseases, including tuberculosis.",
+      "Infectious Disease Specialist":
+        "Manages bacterial infections and recommends appropriate treatments.",
+    },
     severity: "Severe",
   },
   "chronic lower respiratory diseases (clrd)": {
@@ -87,7 +111,11 @@ export const symptomsData = {
     ],
     reminder:
       "Consult a healthcare provider for proper diagnosis and management options.",
-    doctor: ["Pulmonologist", "General Practitioner"],
+    doctor: {
+      Pulmonologist: "Diagnoses and manages chronic lung conditions like COPD.",
+      "General Practitioner":
+        "Provides early diagnosis and helps with symptom management.",
+    },
     severity: "Moderate",
   },
   "kidney diseases": {
@@ -101,7 +129,12 @@ export const symptomsData = {
     ],
     reminder:
       "Regular check-ups are vital; seek medical advice if you notice symptoms.",
-    doctor: ["Nephrologist", "General Practitioner"],
+    doctor: {
+      Nephrologist:
+        "Specializes in kidney function and helps manage chronic kidney disease.",
+      "General Practitioner":
+        "Provides initial assessment and referrals if needed.",
+    },
     severity: "Moderate",
   },
   "liver diseases": {
@@ -115,7 +148,11 @@ export const symptomsData = {
     ],
     reminder:
       "Consult a healthcare provider for liver function tests if you experience these symptoms.",
-    doctor: ["Hepatologist", "Gastroenterologist"],
+    doctor: {
+      Hepatologist: "Focuses on liver diseases and their treatment options.",
+      Gastroenterologist:
+        "Manages digestive and liver-related conditions, including hepatitis.",
+    },
     severity: "Moderate",
   },
   leptospirosis: {
@@ -131,7 +168,12 @@ export const symptomsData = {
     ],
     reminder:
       "Seek medical attention if you suspect leptospirosis, especially after exposure to contaminated water.",
-    doctor: ["Infectious Disease Specialist", "General Practitioner"],
+    doctor: {
+      "Infectious Disease Specialist":
+        "Diagnoses and treats bacterial infections like leptospirosis.",
+      "General Practitioner":
+        "Assesses initial symptoms and provides early treatment guidance.",
+    },
     severity: "Severe",
   },
   "gastroesophageal reflux disease (gerd)": {
@@ -146,7 +188,12 @@ export const symptomsData = {
     ],
     reminder:
       "Lifestyle changes and medications can help manage GERD symptoms; consult a healthcare provider for guidance.",
-    doctor: ["Gastroenterologist", "General Practitioner"],
+    doctor: {
+      Gastroenterologist:
+        "Specializes in digestive disorders, including acid reflux diseases.",
+      "General Practitioner":
+        "Provides initial management and lifestyle recommendations.",
+    },
     severity: "Mild",
   },
 };
