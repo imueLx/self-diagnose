@@ -11,6 +11,8 @@ export const symptomsData = {
     ],
     reminder:
       "These symptoms can vary; consult a healthcare provider for an accurate diagnosis.",
+    doctor: ["Cardiologist", "General Practitioner"],
+    severity: "Severe",
   },
   hypertension: {
     brief:
@@ -24,6 +26,8 @@ export const symptomsData = {
     ],
     reminder:
       "Regular monitoring is essential; seek medical advice if you experience symptoms.",
+    doctor: ["Cardiologist", "General Practitioner"],
+    severity: "Moderate",
   },
   "dengue fever": {
     brief:
@@ -37,6 +41,8 @@ export const symptomsData = {
     ],
     reminder:
       "If you suspect dengue fever due to mosquito exposure, seek medical attention immediately.",
+    doctor: ["Infectious Disease Specialist", "General Practitioner"],
+    severity: "Severe",
   },
   "diabetes mellitus": {
     brief:
@@ -50,6 +56,8 @@ export const symptomsData = {
     ],
     reminder:
       "Consult a healthcare provider for blood sugar testing and management strategies.",
+    doctor: ["Endocrinologist", "General Practitioner"],
+    severity: "Moderate",
   },
   "tuberculosis (tb)": {
     brief:
@@ -64,6 +72,8 @@ export const symptomsData = {
     ],
     reminder:
       "If you suspect TB, seek immediate medical attention for testing and treatment.",
+    doctor: ["Pulmonologist", "Infectious Disease Specialist"],
+    severity: "Severe",
   },
   "chronic lower respiratory diseases (clrd)": {
     brief:
@@ -77,6 +87,8 @@ export const symptomsData = {
     ],
     reminder:
       "Consult a healthcare provider for proper diagnosis and management options.",
+    doctor: ["Pulmonologist", "General Practitioner"],
+    severity: "Moderate",
   },
   "kidney diseases": {
     brief:
@@ -89,6 +101,8 @@ export const symptomsData = {
     ],
     reminder:
       "Regular check-ups are vital; seek medical advice if you notice symptoms.",
+    doctor: ["Nephrologist", "General Practitioner"],
+    severity: "Moderate",
   },
   "liver diseases": {
     brief:
@@ -101,6 +115,8 @@ export const symptomsData = {
     ],
     reminder:
       "Consult a healthcare provider for liver function tests if you experience these symptoms.",
+    doctor: ["Hepatologist", "Gastroenterologist"],
+    severity: "Moderate",
   },
   leptospirosis: {
     brief:
@@ -115,6 +131,8 @@ export const symptomsData = {
     ],
     reminder:
       "Seek medical attention if you suspect leptospirosis, especially after exposure to contaminated water.",
+    doctor: ["Infectious Disease Specialist", "General Practitioner"],
+    severity: "Severe",
   },
   "gastroesophageal reflux disease (gerd)": {
     brief:
@@ -128,5 +146,7 @@ export const symptomsData = {
     ],
     reminder:
       "Lifestyle changes and medications can help manage GERD symptoms; consult a healthcare provider for guidance.",
+    doctor: ["Gastroenterologist", "General Practitioner"],
+    severity: "Mild",
   },
 };
