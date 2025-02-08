@@ -1,88 +1,115 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { symptomsData } from "../../data/symptomsData";
 import { useRouter } from "next/navigation";
+import {
+  FaSearch,
+  FaPlus,
+  FaSpinner,
+  FaGlobe,
+  FaTimesCircle,
+  FaTimes,
+} from "react-icons/fa";
 
-import { FaSearch, FaPlusCircle, FaSpinner } from "react-icons/fa";
+const translations = {
+  en: {
+    title: "Symptom Checker",
+    description:
+      "Select symptoms to check possible conditions. This tool provides guidance but does not replace professional medical advice.",
+    enterSymptom: "Enter a symptom",
+    possibleConditions: "Possible Conditions",
+    learnMore: "Learn More",
+    suggestedSymptoms: "Suggested Symptoms",
+    selectedSymptoms: "Selected Symptoms",
+    matches: "Matches",
+  },
+  tl: {
+    title: "Tagasuri ng Sintomas",
+    description:
+      "Pumili ng mga sintomas upang suriin ang posibleng mga kondisyon. Ang tool na ito ay nagbibigay ng gabay ngunit hindi pumapalit sa propesyonal na medikal na payo.",
+    enterSymptom: "Ilagay ang isang sintomas",
+    possibleConditions: "Posibleng mga Kondisyon",
+    learnMore: "Alamin Pa",
+    suggestedSymptoms: "Inirerekomendang Sintomas",
+    selectedSymptoms: "Napiling Sintomas",
+    matches: "Mga Tugma",
+  },
+};
 
 export default function SymptomChecker() {
+  const [hydrated, setHydrated] = useState(false);
   const [input, setInput] = useState("");
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [matchedConditions, setMatchedConditions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState("en");
+  const [suggestedSymptoms, setSuggestedSymptoms] = useState([]);
   const router = useRouter();
 
-  // Extract all symptoms and their conditions
-  const allSymptoms = Object.entries(symptomsData).flatMap(
-    ([condition, data]) => data.signs.map((sign) => ({ sign, condition }))
-  );
-
-  // Find all unique symptoms
-  const uniqueSymptoms = [...new Set(allSymptoms.map(({ sign }) => sign))];
-
-  // Filter symptoms: Remove selected, match input
-  const filteredSymptoms = uniqueSymptoms.filter(
-    (symptom) =>
-      !selectedSymptoms.includes(symptom) &&
-      symptom.toLowerCase().includes(input.toLowerCase())
-  );
-
-  // Find related symptoms based on the selected symptoms
-  const getRelatedSymptoms = () => {
-    if (selectedSymptoms.length === 0) return filteredSymptoms;
-
-    let relatedSymptoms = new Set();
-
-    selectedSymptoms.forEach((symptom) => {
-      allSymptoms.forEach(({ sign, condition }) => {
-        if (symptom === sign) {
-          symptomsData[condition].signs.forEach((relatedSign) => {
-            if (!selectedSymptoms.includes(relatedSign)) {
-              relatedSymptoms.add(relatedSign);
-            }
-          });
-        }
-      });
-    });
-
-    return [...relatedSymptoms];
-  };
-
-  // Add a symptom to the selected list
-  const addSymptom = (symptom) => {
-    if (!selectedSymptoms.includes(symptom)) {
-      setSelectedSymptoms((prev) => [...prev, symptom]);
-      checkSymptoms([...selectedSymptoms, symptom]);
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
-    setInput("");
+    return array;
   };
 
-  // Remove a symptom
-  const removeSymptom = (symptom) => {
-    const updatedSymptoms = selectedSymptoms.filter((s) => s !== symptom);
-    setSelectedSymptoms(updatedSymptoms);
-    checkSymptoms(updatedSymptoms);
-  };
+  useEffect(() => {
+    setHydrated(true);
+    if (typeof window !== "undefined") {
+      const storedLanguage = localStorage.getItem("language") || "en";
+      setLanguage(storedLanguage);
+      console.log("Language set to", storedLanguage);
+    }
+  }, []);
 
-  // Check for matching conditions
-  const checkSymptoms = (currentSymptoms) => {
-    setLoading(true);
-    setTimeout(() => {
+  useEffect(() => {
+    if (hydrated) {
+      localStorage.setItem("language", language);
+      console.log("Language set hydrated", language);
+    }
+  }, [language, hydrated]);
+
+  useEffect(() => {
+    if (selectedSymptoms.length > 0) {
+      // Get related symptoms from conditions that match selected ones
+      const relatedSymptoms = new Set();
+
+      selectedSymptoms.forEach((selected) => {
+        Object.entries(symptomsData).forEach(([condition, data]) => {
+          if (data.signs[language].includes(selected)) {
+            data.signs[language].forEach((sign) => {
+              if (!selectedSymptoms.includes(sign)) {
+                relatedSymptoms.add(sign);
+              }
+            });
+          }
+        });
+      });
+
+      setSuggestedSymptoms(Array.from(relatedSymptoms));
+    } else {
+      // Show all available symptoms when none are selected
+      const allSymptoms = Object.entries(symptomsData).flatMap(
+        ([condition, data]) => data.signs[language]
+      );
+      setSuggestedSymptoms([...new Set(allSymptoms)]);
+    }
+  }, [selectedSymptoms, language]);
+
+  useEffect(() => {
+    if (selectedSymptoms.length > 0) {
       let conditionMatches = {};
-
-      currentSymptoms.forEach((symptom) => {
-        allSymptoms.forEach(({ sign, condition }) => {
-          if (symptom === sign) {
-            const { brief, signs, reminder } = symptomsData[condition];
-            if (conditionMatches[condition]) {
-              conditionMatches[condition].count += 1;
-              conditionMatches[condition].matchedSigns.push(sign);
-            } else {
+      selectedSymptoms.forEach((symptom) => {
+        Object.entries(symptomsData).forEach(([condition, data]) => {
+          if (data.signs[language].includes(symptom)) {
+            if (!conditionMatches[condition]) {
               conditionMatches[condition] = {
                 count: 1,
-                details: { condition, brief, signs, reminder },
-                matchedSigns: [sign],
+                brief: data.brief[language],
               };
+            } else {
+              conditionMatches[condition].count += 1;
             }
           }
         });
@@ -90,140 +117,189 @@ export default function SymptomChecker() {
 
       const sortedConditions = Object.entries(conditionMatches)
         .sort((a, b) => b[1].count - a[1].count)
-        .map(([condition, data]) => ({
-          condition,
-          ...data.details,
-          matchCount: data.count,
-          matchedSigns: data.matchedSigns,
-        }));
+        .map(([condition, data]) => ({ condition, ...data }));
 
-      setTimeout(() => {
-        setMatchedConditions(sortedConditions);
-        setLoading(false);
-      }, 500);
+      setMatchedConditions(sortedConditions);
+    } else {
+      setMatchedConditions([]);
+    }
+  }, [selectedSymptoms, language]);
+
+  const t = translations[language];
+  const changeLanguage = () => {
+    setLanguage((prevLanguage) => (prevLanguage === "en" ? "tl" : "en"));
+    setSelectedSymptoms([]);
+  };
+
+  if (!hydrated) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <FaSpinner className="animate-spin text-4xl text-blue-500" />
+      </div>
+    );
+  }
+
+  const allSymptoms = Object.entries(symptomsData).flatMap(
+    ([condition, data]) =>
+      data.signs[language].map((sign) => ({ sign, condition }))
+  );
+
+  const uniqueSymptoms = [...new Set(allSymptoms.map(({ sign }) => sign))];
+
+  const filteredSymptoms = shuffleArray(
+    uniqueSymptoms.filter((symptom) => {
+      const lowerCaseInput = input.toLowerCase();
+      const symptomInCurrentLanguage = symptom
+        .toLowerCase()
+        .includes(lowerCaseInput);
+      const symptomInOtherLanguage = Object.values(symptomsData).some((data) =>
+        data.signs[language === "en" ? "tl" : "en"]
+          .map((sign) => sign.toLowerCase())
+          .includes(lowerCaseInput)
+      );
+      return (
+        !selectedSymptoms.includes(symptom) &&
+        (symptomInCurrentLanguage || symptomInOtherLanguage)
+      );
+    })
+  );
+
+  const addSymptom = (symptom) => {
+    if (!selectedSymptoms.includes(symptom)) {
+      setSelectedSymptoms([...selectedSymptoms, symptom]);
+      checkSymptoms([...selectedSymptoms, symptom]);
+    }
+    setInput("");
+  };
+
+  const removeSymptom = (symptom) => {
+    const updatedSymptoms = selectedSymptoms.filter((s) => s !== symptom);
+    setSelectedSymptoms(updatedSymptoms);
+    checkSymptoms(updatedSymptoms);
+  };
+
+  const checkSymptoms = (currentSymptoms) => {
+    setLoading(true);
+    setTimeout(() => {
+      let conditionMatches = {};
+      currentSymptoms.forEach((symptom) => {
+        allSymptoms.forEach(({ sign, condition }) => {
+          if (symptom === sign) {
+            const { brief } = symptomsData[condition];
+            if (!conditionMatches[condition]) {
+              conditionMatches[condition] = {
+                count: 1,
+                brief: brief[language],
+              };
+            } else {
+              conditionMatches[condition].count += 1;
+            }
+          }
+        });
+      });
+
+      const sortedConditions = Object.entries(conditionMatches)
+        .sort((a, b) => b[1].count - a[1].count)
+        .map(([condition, data]) => ({ condition, ...data }));
+
+      setMatchedConditions(sortedConditions);
+      setLoading(false);
     }, 500);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-8 flex flex-col items-center">
-      <div className="max-w-6xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 md:p-12">
-        <h1 className="text-4xl font-bold text-blue-600 dark:text-blue-400 text-center">
-          Symptom Checker
-        </h1>
-        <p className="mt-4 text-lg text-center">
-          Select symptoms to check possible conditions. This tool provides
-          guidance but does not replace professional medical advice.
-        </p>
-
-        {/* Search Box */}
-        <div className="mt-8 flex flex-col items-center">
-          <div className="relative w-full md:w-2/3">
-            <input
-              type="text"
-              className="border p-3 w-full dark:bg-gray-700 dark:text-white rounded-lg shadow-sm pr-10"
-              placeholder="Enter a symptom"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-            <FaSearch className="absolute right-3 top-3 text-gray-400" />
-          </div>
-
-          {filteredSymptoms.length > 0 && (
-            <ul className="bg-white dark:bg-gray-800 border rounded-lg mt-2 shadow-md max-h-40 overflow-y-auto w-full md:w-2/3">
-              {filteredSymptoms.map((symptom) => (
-                <li
-                  key={symptom}
-                  className="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 flex justify-between items-center"
-                  onClick={() => addSymptom(symptom)}
-                >
-                  {symptom}
-                  <FaPlusCircle className="text-blue-500" />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Selected Symptoms */}
-        <div className="mt-4 flex flex-wrap gap-2 justify-center">
-          {selectedSymptoms.map((symptom) => (
-            <span
-              key={symptom}
-              className="bg-blue-500 text-white px-3 py-1 rounded-full flex items-center"
-            >
-              {symptom}
-              <button
-                className="ml-2 text-lg"
-                onClick={() => removeSymptom(symptom)}
-              >
-                ×
-              </button>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center">
+      <div className="max-w-4xl w-full bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+        <div className="flex justify-end mb-4">
+          <button
+            className="bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-md flex items-center space-x-2 sm:space-x-3 transition-colors duration-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+            onClick={changeLanguage}
+          >
+            <FaGlobe className="text-lg sm:text-xl" />
+            <span className="text-sm sm:text-base">
+              {language === "en" ? "Tagalog" : "English"}
             </span>
-          ))}
+          </button>
         </div>
 
-        {/* Bubble Map for Symptoms */}
-        <div className="mt-8 hidden md:flex flex-wrap gap-4 justify-center">
-          {getRelatedSymptoms().map((symptom) => (
-            <button
-              key={symptom}
-              onClick={() => addSymptom(symptom)}
-              className="bg-blue-300 dark:bg-blue-700 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-400 dark:hover:bg-blue-600 transition text-sm"
-            >
-              {symptom}
-            </button>
-          ))}
+        <h1 className="text-4xl font-bold text-blue-600 dark:text-blue-400 text-center">
+          {t.title}
+        </h1>
+        <p className="mt-4 text-lg text-center">{t.description}</p>
+
+        <div className="mt-4 relative">
+          <input
+            type="text"
+            className="w-full p-3 border rounded-md dark:bg-gray-700 dark:text-white"
+            placeholder={t.enterSymptom}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <FaSearch className="absolute right-3 top-3 text-gray-400" />
         </div>
 
-        {/* Loading Indicator */}
-        {loading && (
-          <div className="mt-4 text-center justify-center flex items-center">
-            <FaSpinner className="animate-spin text-blue-500 text-2xl" />
+        {filteredSymptoms.length > 0 && (
+          <div className="mt-2 max-h-40 overflow-y-auto border rounded-md">
+            {filteredSymptoms.map((symptom) => (
+              <div
+                key={symptom}
+                className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer flex justify-between"
+                onClick={() => addSymptom(symptom)}
+              >
+                {symptom} <FaPlus className="text-blue-500" />
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Matched Conditions */}
+        <div className="mt-4">
+          <h2 className="font-semibold">{t.selectedSymptoms}</h2>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {selectedSymptoms.map((symptom) => (
+              <span
+                key={symptom}
+                className="p-2 bg-blue-500 text-white rounded-full flex items-center"
+              >
+                {symptom}{" "}
+                <FaTimes
+                  className="ml-2 cursor-pointer"
+                  onClick={() => removeSymptom(symptom)}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {loading && <FaSpinner className="animate-spin text-blue-500 mt-4" />}
+
         {!loading && matchedConditions.length > 0 && (
           <div className="mt-6">
             <h2 className="text-2xl font-semibold text-center">
-              Possible Conditions
+              {t.possibleConditions}
             </h2>
-            {matchedConditions.map(
-              ({ condition, brief, signs, matchCount }) => (
-                <div
-                  key={condition}
-                  className="mt-4 p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800 cursor-pointer hover:shadow-lg transition hover:bg-gray-100 dark:hover:bg-gray-700"
-                  onClick={() =>
-                    router.push(
-                      `/conditions/${condition
-                        .replace(/\s+/g, "-")
-                        .toLowerCase()}`
-                    )
-                  }
-                >
-                  <h3 className="text-xl sm:text-2xl md:text-3xl uppercase font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">
+            {matchedConditions.map(({ condition, brief, count }) => (
+              <div
+                key={condition}
+                className="mt-4 p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800 cursor-pointer hover:shadow-lg transition"
+                onClick={() =>
+                  router.push(
+                    `/conditions/${condition
+                      .replace(/\s+/g, "-")
+                      .toLowerCase()}`
+                  )
+                }
+              >
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl sm:text-2xl uppercase font-bold text-blue-600 dark:text-blue-400">
                     {condition}
-                    <span className="text-red-500 dark:text-red-400 lowercase italic text-lg sm:text-xl font-bold">
-                      {""} - {matchCount} symptom(s) matched
-                    </span>
                   </h3>
-                  <p className="mt-2">{brief}</p>
-                  <button
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push(
-                        `/conditions/${condition
-                          .replace(/\s+/g, "-")
-                          .toLowerCase()}`
-                      );
-                    }}
-                  >
-                    Learn More
-                  </button>
+                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+                    {count} {t.matches}
+                  </span>
                 </div>
-              )
-            )}
+                <p className="mt-2">{brief}</p>
+              </div>
+            ))}
           </div>
         )}
       </div>

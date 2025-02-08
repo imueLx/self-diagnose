@@ -8,6 +8,10 @@ const severityColors = {
   Severe: "bg-red-500 text-white",
   Moderate: "bg-yellow-500 text-black",
   Mild: "bg-green-500 text-white",
+  // tagalog
+  Malubha: "bg-red-500 text-white",
+  Katamtaman: "bg-yellow-500 text-black",
+  Magaan: "bg-green-500 text-white",
 };
 
 // Detailed Skeleton Loader Component
@@ -63,8 +67,12 @@ export default function ConditionPage() {
   const [loading, setLoading] = useState(true);
   const [conditionData, setConditionData] = useState(null);
   const [fadeIn, setFadeIn] = useState(false);
+  const [language, setLanguage] = useState("en");
 
   useEffect(() => {
+    const storedLanguage = localStorage.getItem("language") || "en";
+    setLanguage(storedLanguage);
+
     setTimeout(() => {
       setConditionData(symptomsData[decodedCondition] || null);
       setLoading(false);
@@ -113,14 +121,14 @@ export default function ConditionPage() {
 
         <div
           className={`mt-4 px-4 py-2 text-lg font-semibold text-center rounded-lg ${
-            severityColors[conditionData.severity] || "bg-gray-400"
+            severityColors[conditionData.severity[language]] || "bg-gray-400"
           }`}
         >
-          Severity: {conditionData.severity}
+          Severity: {conditionData.severity[language]}
         </div>
 
         <p className="mt-4 text-lg text-center text-gray-700 dark:text-gray-300">
-          {conditionData.brief}
+          {conditionData.brief[language]}
         </p>
 
         <div className="mt-8">
@@ -128,7 +136,7 @@ export default function ConditionPage() {
             Signs & Symptoms
           </h2>
           <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-            {conditionData.signs.map((sign, index) => (
+            {conditionData.signs[language].map((sign, index) => (
               <li
                 key={index}
                 className="bg-gray-200 dark:bg-gray-700 p-3 rounded-lg shadow-md text-center"
@@ -155,7 +163,7 @@ export default function ConditionPage() {
                     <span className="font-semibold">{doctor}</span>
                   </div>
                   <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                    {explanation}
+                    {explanation[language]}
                   </p>
                 </li>
               )
@@ -164,7 +172,7 @@ export default function ConditionPage() {
         </div>
 
         <p className="mt-6 text-base italic text-gray-600 dark:text-gray-400 text-center">
-          {conditionData.reminder}
+          {conditionData.reminder[language]}
         </p>
 
         <div className="mt-8 p-5 bg-yellow-100 dark:bg-yellow-700 text-yellow-900 dark:text-yellow-200 rounded-lg shadow-md">
