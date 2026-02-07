@@ -2,90 +2,81 @@ import { FiBookOpen, FiMail, FiUsers } from "react-icons/fi";
 
 export default function About() {
   return (
-    <div className="p-6 max-w-4xl mx-auto text-gray-900 dark:text-gray-100">
-      {/* Page Title */}
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
-        <FiBookOpen className="text-blue-500 dark:text-blue-400 w-10 h-10" />
-        <div>
-          <p className="text-sm uppercase tracking-widest text-gray-600 dark:text-gray-400">
-            About
-          </p>
-          <h1 className="text-3xl sm:text-4xl font-bold">
-            Digital Health Literacy
-          </h1>
+    <div className="space-y-12">
+      <section className="glass-panel rounded-3xl p-8 shadow-xl shadow-teal-500/10 dark:shadow-none">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-600 text-white">
+            <FiBookOpen className="h-6 w-6" />
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              About EduHealth
+            </p>
+            <h1 className="font-display text-3xl font-semibold text-slate-900 dark:text-white sm:text-4xl">
+              Building smarter digital health habits
+            </h1>
+          </div>
         </div>
-      </div>
-
-      <p className="mt-4 text-base sm:text-lg leading-relaxed max-w-prose">
-        In today’s digital age, access to health information is easier than
-        ever. However, misinformation and self-diagnosis can lead to unnecessary
-        anxiety or improper treatment. Understanding how to evaluate online
-        health resources is crucial.
-      </p>
-
-      {/* Section: Importance */}
-      <section className="mt-8">
-        <h2 className="text-2xl font-semibold">
-          The Importance of Digital Health Literacy
-        </h2>
-        <p className="mt-2 text-base leading-relaxed max-w-prose">
-          Digital health literacy is the ability to find, evaluate, and
-          effectively use health information from online sources. Those with
-          strong digital literacy skills can make more informed health decisions
-          and avoid unreliable or misleading content.
+        <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-300">
+          In a world full of online health content, knowing what to trust is a
+          vital skill. EduHealth is a learning space that helps students and
+          families evaluate information, avoid misinformation, and make safer
+          decisions.
         </p>
       </section>
 
-      {/* Section: Making Informed Choices */}
-      <section className="mt-8">
-        <h2 className="text-2xl font-semibold">
-          Making Informed Health Choices
-        </h2>
-        <p className="mt-2 text-base leading-relaxed max-w-prose">
-          Many individuals rely on online symptom checkers and forums before
-          consulting a doctor. While these tools can offer guidance, they should
-          not replace professional medical advice. Learning how to differentiate
-          credible health sources from misinformation can help individuals make
-          safer, more accurate health decisions.
-        </p>
+      <section className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">
+            Why digital health literacy matters
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            Digital health literacy is the ability to find, evaluate, and use
+            health information from online sources. Strong literacy skills help
+            people identify credible guidance and avoid harmful misinformation.
+          </p>
+        </div>
+        <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">
+            Making informed choices
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            Online tools can support learning, but they should never replace
+            professional medical advice. We teach how to verify sources and know
+            when to seek care.
+          </p>
+        </div>
       </section>
 
-      {/* Section: About the Creators */}
-      <section className="mt-10 border-t border-gray-300 dark:border-gray-700 pt-6">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <FiUsers className="text-blue-500 dark:text-blue-400 w-8 h-8" />
-          About the Creators
-        </h2>
-        <p className="mt-2 text-base leading-relaxed max-w-prose">
-          This website was created by a team of dedicated students passionate
-          about improving digital health literacy. Our goal is to provide
-          reliable and accessible health information to everyone.
-        </p>
-      </section>
-
-      {/* Section: Contact Us */}
-      <section className="mt-10 border-t border-gray-300 dark:border-gray-700 pt-6">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <FiMail className="text-blue-500 dark:text-blue-400 w-8 h-8" />
-          Contact Us
-        </h2>
-        <p className="mt-2 text-base leading-relaxed max-w-prose">
-          If you have any questions or feedback, please feel free to reach out
-          to us at:{" "}
-          <a
-            href="mailto:mariacecelausa@gmail.com"
-            className="text-blue-500 dark:text-blue-400 underline"
-          >
-            mariacecelausa@gmail.com
-          </a>
-          <br />
-          <a
-            href="mailto:nicaerese158@gmail.com"
-            className="text-blue-500 dark:text-blue-400 underline"
-          >
-            nicaerese158@gmail.com
-          </a>
-        </p>
+      <section className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <FiUsers className="h-6 w-6 text-teal-600" />
+            Our creators
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            EduHealth was built by students committed to accessible, trustworthy
+            education. Our mission is to empower learners with practical health
+            literacy tools.
+          </p>
+        </div>
+        <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <FiMail className="h-6 w-6 text-teal-600" />
+            Contact us
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            Questions or feedback? Reach out at:
+          </p>
+          <div className="mt-3 space-y-2 text-sm font-semibold text-teal-700">
+            <a href="mailto:mariacecelausa@gmail.com" className="block">
+              mariacecelausa@gmail.com
+            </a>
+            <a href="mailto:nicaerese158@gmail.com" className="block">
+              nicaerese158@gmail.com
+            </a>
+          </div>
+        </div>
       </section>
     </div>
   );

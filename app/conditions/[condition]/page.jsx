@@ -1,58 +1,58 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { symptomsData } from "../../../data/symptomsData";
+import { useEffect, useMemo, useState } from "react";
+import { symptomCatalog, conditions } from "../../../data/symptomsData";
 import { FaArrowLeft, FaExclamationTriangle, FaUserMd } from "react-icons/fa";
 
 const severityColors = {
-  Severe: "bg-red-500 text-white",
-  Moderate: "bg-yellow-500 text-black",
-  Mild: "bg-green-500 text-white",
+  Severe: "bg-rose-500 text-white",
+  Moderate: "bg-amber-300 text-slate-900",
+  Mild: "bg-emerald-500 text-white",
   // tagalog
-  Malubha: "bg-red-500 text-white",
-  Katamtaman: "bg-yellow-500 text-black",
-  Magaan: "bg-green-500 text-white",
+  Malubha: "bg-rose-500 text-white",
+  Katamtaman: "bg-amber-300 text-slate-900",
+  Magaan: "bg-emerald-500 text-white",
 };
 
 // Detailed Skeleton Loader Component
 const SkeletonLoader = () => (
-  <div className="min-h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900 p-6">
-    <div className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 md:p-12 animate-pulse">
+  <div className="flex min-h-[60vh] items-center justify-center p-6">
+    <div className="glass-panel w-full max-w-3xl rounded-3xl p-8 shadow-xl shadow-teal-500/10 animate-pulse dark:shadow-none">
       {/* Back Button */}
-      <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded mb-6"></div>
+      <div className="mb-6 h-6 w-24 rounded bg-slate-200 dark:bg-slate-800"></div>
 
       {/* Title */}
-      <div className="h-10 w-2/3 bg-gray-300 dark:bg-gray-700 rounded mx-auto mb-6"></div>
+      <div className="mx-auto mb-6 h-10 w-2/3 rounded bg-slate-200 dark:bg-slate-800"></div>
 
       {/* Severity Badge */}
-      <div className="h-6 w-1/2 bg-gray-300 dark:bg-gray-700 rounded mx-auto mb-6"></div>
+      <div className="mx-auto mb-6 h-6 w-1/2 rounded bg-slate-200 dark:bg-slate-800"></div>
 
       {/* Brief Description */}
-      <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-700 rounded mx-auto mb-4"></div>
-      <div className="h-5 w-2/3 bg-gray-300 dark:bg-gray-700 rounded mx-auto mb-6"></div>
+      <div className="mx-auto mb-4 h-5 w-3/4 rounded bg-slate-200 dark:bg-slate-800"></div>
+      <div className="mx-auto mb-6 h-5 w-2/3 rounded bg-slate-200 dark:bg-slate-800"></div>
 
       {/* Symptoms Section */}
-      <div className="h-6 w-1/3 bg-gray-300 dark:bg-gray-700 rounded mx-auto mb-4"></div>
+      <div className="mx-auto mb-4 h-6 w-1/3 rounded bg-slate-200 dark:bg-slate-800"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {Array(4)
           .fill("")
           .map((_, index) => (
             <div
               key={index}
-              className="h-10 bg-gray-300 dark:bg-gray-700 rounded"
+              className="h-10 rounded bg-slate-200 dark:bg-slate-800"
             ></div>
           ))}
       </div>
 
       {/* Recommended Doctors Section */}
-      <div className="h-6 w-1/3 bg-gray-300 dark:bg-gray-700 rounded mx-auto mt-8 mb-4"></div>
+      <div className="mx-auto mb-4 mt-8 h-6 w-1/3 rounded bg-slate-200 dark:bg-slate-800"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {Array(2)
           .fill("")
           .map((_, index) => (
             <div
               key={index}
-              className="h-10 bg-gray-300 dark:bg-gray-700 rounded"
+              className="h-10 rounded bg-slate-200 dark:bg-slate-800"
             ></div>
           ))}
       </div>
@@ -61,24 +61,34 @@ const SkeletonLoader = () => (
 );
 
 export default function ConditionPage() {
-  const { condition } = useParams();
+  const { condition: conditionId } = useParams();
   const router = useRouter();
-  const decodedCondition = decodeURIComponent(condition).replace(/-/g, " ");
   const [loading, setLoading] = useState(true);
   const [conditionData, setConditionData] = useState(null);
   const [fadeIn, setFadeIn] = useState(false);
   const [language, setLanguage] = useState("en");
+
+  const symptomsById = useMemo(() => {
+    const map = new Map();
+    symptomCatalog.forEach((symptom) => map.set(symptom.id, symptom));
+    return map;
+  }, []);
+
+  const matchedCondition = useMemo(
+    () => conditions.find((item) => item.id === conditionId),
+    [conditionId],
+  );
 
   useEffect(() => {
     const storedLanguage = localStorage.getItem("language") || "en";
     setLanguage(storedLanguage);
 
     setTimeout(() => {
-      setConditionData(symptomsData[decodedCondition] || null);
+      setConditionData(matchedCondition || null);
       setLoading(false);
-      setTimeout(() => setFadeIn(true), 50); // Small delay for smooth transition
+      setTimeout(() => setFadeIn(true), 50);
     }, 1000);
-  }, [decodedCondition]);
+  }, [matchedCondition]);
 
   if (loading) {
     return <SkeletonLoader />;
@@ -86,14 +96,12 @@ export default function ConditionPage() {
 
   if (!conditionData) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6">
-        <FaExclamationTriangle className="text-6xl text-red-500 dark:text-red-400 mb-4" />
-        <h1 className="text-3xl font-bold text-red-600 dark:text-red-400">
-          Condition Not Found
-        </h1>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center text-slate-900 dark:text-slate-100">
+        <FaExclamationTriangle className="text-5xl text-rose-500" />
+        <h1 className="text-3xl font-semibold">Condition Not Found</h1>
         <button
           onClick={() => router.back()}
-          className="mt-6 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+          className="rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
         >
           Go Back
         </button>
@@ -103,83 +111,89 @@ export default function ConditionPage() {
 
   return (
     <div
-      className={`min-h-screen bg-gray-100 dark:bg-gray-900 p-6 flex justify-center items-center transition-opacity duration-300 ${
+      className={`transition-opacity duration-300 ${
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
-      <div className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 md:p-12">
+      <div className="glass-panel mx-auto w-full max-w-3xl rounded-3xl p-8 shadow-xl shadow-teal-500/10 dark:shadow-none">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-blue-500 hover:text-blue-700 transition mb-4"
+          className="flex items-center text-sm font-semibold text-teal-700 transition hover:text-teal-600"
         >
           <FaArrowLeft className="mr-2" /> Back
         </button>
 
-        <h1 className="text-4xl font-bold text-blue-600 dark:text-blue-400 text-center">
-          {decodedCondition.toUpperCase()}
+        <h1 className="font-display text-3xl font-semibold text-slate-900 dark:text-white text-center sm:text-4xl">
+          {conditionData.name[language].toUpperCase()}
         </h1>
 
         <div
-          className={`mt-4 px-4 py-2 text-lg font-semibold text-center rounded-lg ${
+          className={`mt-4 rounded-full px-4 py-2 text-sm font-semibold text-center ${
             severityColors[conditionData.severity[language]] || "bg-gray-400"
           }`}
         >
           Severity: {conditionData.severity[language]}
         </div>
 
-        <p className="mt-4 text-lg text-center text-gray-700 dark:text-gray-300">
+        <p className="mt-4 text-sm text-center text-slate-600 dark:text-slate-300">
           {conditionData.brief[language]}
         </p>
 
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold text-center border-b pb-2">
+          <h2 className="text-xl font-semibold text-center text-slate-900 dark:text-white">
             Signs & Symptoms
           </h2>
-          <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-            {conditionData.signs[language].map((sign, index) => (
-              <li
-                key={index}
-                className="bg-gray-200 dark:bg-gray-700 p-3 rounded-lg shadow-md text-center"
-              >
-                {sign}
-              </li>
-            ))}
+          <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {conditionData.evidence.map((evidence) => {
+              const symptom = symptomsById.get(evidence.symptomId);
+              const label = symptom?.label?.[language] || evidence.symptomId;
+              return (
+                <li
+                  key={evidence.symptomId}
+                  className="rounded-2xl border border-slate-200 bg-white/80 p-3 text-center text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200"
+                >
+                  {label}
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold text-center border-b pb-2">
+          <h2 className="text-xl font-semibold text-center text-slate-900 dark:text-white">
             Recommended Doctors
           </h2>
-          <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-            {Object.entries(conditionData.doctor).map(
+          <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {Object.entries(conditionData.doctors).map(
               ([doctor, explanation], index) => (
                 <li
                   key={index}
-                  className="bg-blue-200 dark:bg-blue-700 p-4 rounded-lg shadow-md"
+                  className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/70"
                 >
                   <div className="flex items-center space-x-2">
-                    <FaUserMd className="text-blue-600 dark:text-blue-300" />
-                    <span className="font-semibold">{doctor}</span>
+                    <FaUserMd className="text-teal-600" />
+                    <span className="font-semibold text-slate-900 dark:text-white">
+                      {doctor}
+                    </span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                     {explanation[language]}
                   </p>
                 </li>
-              )
+              ),
             )}
           </ul>
         </div>
 
-        <p className="mt-6 text-base italic text-gray-600 dark:text-gray-400 text-center">
+        <p className="mt-6 text-sm italic text-slate-500 dark:text-slate-400 text-center">
           {conditionData.reminder[language]}
         </p>
 
-        <div className="mt-8 p-5 bg-yellow-100 dark:bg-yellow-700 text-yellow-900 dark:text-yellow-200 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold flex items-center justify-center">
+        <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900 shadow-sm dark:border-amber-900/60 dark:bg-amber-950/70 dark:text-amber-200">
+          <h3 className="flex items-center justify-center text-base font-semibold">
             <FaExclamationTriangle className="mr-2" /> Important Note
           </h3>
-          <p className="mt-2 text-center text-lg">
+          <p className="mt-2 text-center text-sm">
             This tool is for informational purposes only. Consult a healthcare
             provider for an accurate diagnosis and treatment options.
           </p>

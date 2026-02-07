@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
+import { FiSun, FiMoon, FiMenu, FiX, FiActivity } from "react-icons/fi";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -48,7 +48,7 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   const navLinks = [
-    { name: "Checker", path: "/checker" },
+    { name: "Assessment", path: "/checker" },
     { name: "Guide", path: "/guide" },
     { name: "Risks", path: "/risks" },
     { name: "Resources", path: "/resources" },
@@ -56,82 +56,98 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="relative flex justify-between items-center p-4 bg-blue-100 dark:bg-gray-900 shadow-md">
-      <Link
-        href="/"
-        className="text-2xl font-bold text-blue-700 dark:text-blue-400"
-      >
-        EduHealth
-      </Link>
+    <nav className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/95">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-600 text-white">
+            <FiActivity size={20} />
+          </span>
+          <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            EduHealth
+          </span>
+        </Link>
 
-      {/* Hamburger Menu Icon (Only for Small Screens) */}
-      <button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden p-2 z-50 absolute top-4 right-6"
-        aria-label="Toggle Menu"
-      >
-        <FiMenu size={28} className="text-blue-700 dark:text-blue-400" />
-      </button>
-
-      {/* Sidebar Menu */}
-      <div
-        ref={menuRef}
-        className={`fixed inset-y-0 right-0 w-4/5 bg-white dark:bg-gray-900 shadow-lg transform ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 z-50 md:static md:w-auto md:flex md:gap-6 md:items-center md:translate-x-0 md:bg-transparent md:shadow-none`}
-      >
-        {/* Close Button */}
-        <button
-          onClick={() => setIsMenuOpen(false)}
-          className="absolute top-4 right-6 p-2 text-blue-700 dark:text-blue-400 md:hidden"
-          aria-label="Close Menu"
-        >
-          <FiX size={28} />
-        </button>
-
-        {/* Navigation Links & Dark Mode Toggle for Mobile */}
-        <div className="flex flex-col md:flex-row items-center justify-center h-full md:h-auto gap-4 p-6 md:p-0">
+        <div className="hidden md:flex items-center gap-2">
           {navLinks.map(({ name, path }) => (
             <Link
               key={path}
               href={path}
-              className={`w-full text-center py-3 px-4 rounded-lg text-lg md:text-base font-medium ${
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
                 pathname === path
-                  ? "bg-blue-500 text-white dark:bg-blue-400"
-                  : "text-gray-800 dark:text-gray-300 hover:bg-blue-200 dark:hover:bg-gray-700"
-              } transition-all`}
-              onClick={() => setIsMenuOpen(false)}
+                  ? "bg-teal-600 text-white"
+                  : "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+              }`}
             >
               {name}
             </Link>
           ))}
-
-          {/* Dark Mode Toggle for Mobile (Inside Menu) */}
+          <Link
+            href="/checker"
+            className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+          >
+            Start Assessment
+          </Link>
           <button
             onClick={toggleDarkMode}
-            className="md:hidden p-3 mt-4 text-blue-700 dark:text-blue-400 border rounded-lg w-full"
+            className="rounded-full border border-slate-200 p-2 text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
             aria-label="Toggle Dark Mode"
           >
-            {darkMode ? (
-              <span className="flex items-center justify-center gap-2">
-                <FiSun size={24} /> Light Mode
-              </span>
-            ) : (
-              <span className="flex items-center justify-center gap-2">
-                <FiMoon size={24} /> Dark Mode
-              </span>
-            )}
+            {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
           </button>
         </div>
-      </div>
-      {/* Dark Mode Toggle for Large Screens */}
-      <div className="hidden md:flex gap-4 z-50">
+
         <button
-          onClick={toggleDarkMode}
-          className="p-2 text-blue-700 dark:text-blue-400"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          className="md:hidden inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200"
+          aria-label="Toggle Menu"
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
         >
-          {darkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
+          {isMenuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
+          Menu
         </button>
+      </div>
+
+      <div
+        id="mobile-menu"
+        ref={menuRef}
+        className={`md:hidden overflow-hidden border-t border-slate-200/70 bg-white/95 transition-[max-height] duration-300 dark:border-slate-800/70 dark:bg-slate-950/95 ${
+          isMenuOpen ? "max-h-[520px]" : "max-h-0"
+        }`}
+      >
+        <div className="px-6 py-5">
+          <div className="grid gap-3">
+            {navLinks.map(({ name, path }) => (
+              <Link
+                key={path}
+                href={path}
+                className={`w-full rounded-2xl px-4 py-3 text-base font-medium transition ${
+                  pathname === path
+                    ? "bg-teal-600 text-white"
+                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {name}
+              </Link>
+            ))}
+          </div>
+          <Link
+            href="/checker"
+            className="mt-4 flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Start Assessment
+          </Link>
+          <button
+            onClick={toggleDarkMode}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-200"
+            aria-label="Toggle Dark Mode"
+          >
+            {darkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+            {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
+        </div>
       </div>
     </nav>
   );

@@ -35,54 +35,51 @@ const resources = [
 
 export default function Resources() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      {/* Main Content */}
-      <main className="p-6 max-w-4xl mx-auto">
-        {/* Page Title */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
-          <FiFolder className="text-blue-500 dark:text-blue-400 w-10 h-10" />
+    <div className="space-y-10">
+      <section className="glass-panel rounded-3xl p-8 shadow-xl shadow-teal-500/10 dark:shadow-none">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-600 text-white">
+            <FiFolder className="h-6 w-6" />
+          </div>
           <div>
-            <p className="text-sm uppercase tracking-widest text-gray-600 dark:text-gray-400">
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
               Resources
             </p>
-            <h1 className="text-3xl sm:text-4xl font-bold">
-              Trusted Health Websites
+            <h1 className="font-display text-3xl font-semibold text-slate-900 dark:text-white sm:text-4xl">
+              Trusted health websites
             </h1>
           </div>
         </div>
-
-        <p className="mt-4 text-lg max-w-prose">
-          In today's digital world, having access to{" "}
-          <strong>accurate and reliable health information</strong> is
-          essential. Below are some{" "}
-          <strong>trusted health organizations</strong> that provide
-          expert-reviewed content to help you make informed decisions about your
-          well-being.
+        <p className="mt-4 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
+          Access to accurate and reliable health information is essential. Below
+          are trusted organizations that provide expert-reviewed guidance to
+          support safer decisions.
         </p>
+      </section>
 
-        {/* Resources List */}
-        <ul className="mt-6 space-y-6">
-          {resources.map((res, index) => (
-            <li
-              key={index}
-              className="p-4 bg-white dark:bg-gray-800 shadow rounded-lg"
+      <ul className="grid gap-6 lg:grid-cols-2">
+        {resources.map((res, index) => (
+          <li
+            key={index}
+            className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70"
+          >
+            <a
+              href={res.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 text-lg font-semibold text-slate-900 transition hover:text-teal-600 dark:text-white"
             >
-              <a
-                href={res.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-xl font-semibold text-blue-600 dark:text-blue-300 hover:underline"
-              >
-                <FiExternalLink className="w-6 h-6 text-blue-500 dark:text-blue-400" />
-                {res.name}
-              </a>
-              <p className="mt-2 text-gray-700 dark:text-gray-300">
-                {res.description}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </main>
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-50 text-teal-600 dark:bg-teal-950/60 dark:text-teal-300">
+                <FiExternalLink className="h-5 w-5" />
+              </span>
+              {res.name}
+            </a>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+              {res.description}
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
