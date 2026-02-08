@@ -66,6 +66,38 @@ export default function Guide() {
         </div>
       </section>
 
+      <section className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+            Use the CRAAP Test
+          </h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+            Apply Currency, Relevance, Authority, Accuracy, and Purpose before
+            trusting any medical advice.
+          </p>
+          <Link
+            href="/craap"
+            className="mt-3 inline-flex text-sm font-semibold text-teal-700"
+          >
+            View CRAAP guide
+          </Link>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+            Practice with scenarios
+          </h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+            Check your decision-making with the advanced risk assessment quiz.
+          </p>
+          <Link
+            href="/quiz"
+            className="mt-3 inline-flex text-sm font-semibold text-teal-700"
+          >
+            Take the quiz
+          </Link>
+        </div>
+      </section>
+
       <section className="space-y-4">
         <div>
           <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">

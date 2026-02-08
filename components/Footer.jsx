@@ -20,6 +20,16 @@ export default function Footer() {
           </p>
           <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
             <li>
+              <a className="hover:text-teal-600" href="/quiz">
+                Risk Assessment Quiz
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-teal-600" href="/craap">
+                CRAAP Test
+              </a>
+            </li>
+            <li>
               <a className="hover:text-teal-600" href="/guide">
                 Health Guide
               </a>

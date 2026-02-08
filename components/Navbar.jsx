@@ -49,6 +49,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Assessment", path: "/checker" },
+    { name: "Quiz", path: "/quiz" },
+    { name: "CRAAP", path: "/craap" },
     { name: "Guide", path: "/guide" },
     { name: "Risks", path: "/risks" },
     { name: "Resources", path: "/resources" },
